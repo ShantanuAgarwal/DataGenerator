@@ -1,0 +1,117 @@
+{% extends "layout.html" %} {% block content %}
+<form class="my-5">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <input id="rowId" type="hidden" value="{{id}}" />
+      <label for="lblAttributeName">Attribute Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="attributeName"
+        placeholder="Enter Attribute Name"
+        required="true"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label for="lblAttributeType">Attribute Type</label>
+      <select id="attributeType" class="form-control" required>
+        <option selected value="">None</option>
+        <option>Categorical</option>
+        <option>Continous (int)</option>
+        <option>Continous (float)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row dataOptionsRow">
+    <div class="form-group col-md-6">
+      <label for="lblAttributeName">Data Options</label>
+      <input
+        type="text"
+        class="form-control"
+        id="addDataOption"
+        placeholder="Enter Data Value and Click Add"
+      />
+      <a
+        id="btnAddDataOption"
+        href="#"
+        class="btn btn-secondary my-3"
+        value="Add"
+        >Add</a
+      >
+      <a
+        id="btnRemoveDataOption"
+        href="#"
+        class="btn btn-secondary my-3"
+        value="Remove"
+        >Remove</a
+      >
+    </div>
+
+    <div class="form-group col-md-6 textDataOption">
+      <label for="lblAttributeType">List of all Data options</label>
+      <select id="dataOptionsList" class="form-control" multiple></select>
+      <small id="dataOptionsHelp" class="form-text text-muted"
+        >You can remove options by selecting an element and pressing remove. You
+        can also select multiple elements</small
+      >
+    </div>
+  </div>
+  <div class="form-row numberOptionRow">
+    <div class="form-group col-md-6">
+      <input
+        type="number"
+        class="form-control"
+        id="lowerBoundText"
+        placeholder="Enter Lower Bound"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <input
+        type="number"
+        class="form-control"
+        id="upperBoundText"
+        placeholder="Enter Upper Bound"
+      />
+    </div>
+  </div>
+  <a id="btnAddDataAttribute" class="btn btn-primary" href="#" role="button"
+    >Add Attribute</a
+  >
+</form>
+<table id="dataAttributeDisplayTable" class="display" style="width: 100%">
+  <thead>
+    <tr>
+      <th>Attribute Name</th>
+      <th>Attribute Type</th>
+      <th>List of Options</th>
+      <th>Lower bound</th>
+      <th>Upper bound</th>
+      <th>Misc</th>
+    </tr>
+  </thead>
+</table>
+<form action={{ url_for('generateData') }} method='POST' class="my-5">
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <input type="hidden" id="dataQuery" name="dataQuery"/>
+      <input
+        type="text"
+        class="form-control"
+        id="totalCount",
+        name="totalCount"
+        placeholder="Total records to be generated"
+        required="true"
+      />
+    </div>
+    <div class="form-group col-md-12">
+      <button
+      id="btnGenerateData"
+      class="btn btn-primary btn-sm btn-block"
+      value="GenerateData"
+      type='submit'
+      >Generate Data</button
+    >
+    </div>
+</form>
+<table id="table_id" class="display" style="width: 100%"></table>
+{% endblock content %}
