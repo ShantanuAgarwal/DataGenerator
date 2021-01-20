@@ -6,37 +6,41 @@ const dataOptionField = $("#addDataOption");
 $(document).ready(function () {
   //$("#table_id").DataTable();
   HideAllOptionFields();
+
   $("#dataAttributeDisplayTable").DataTable({
     searching: false,
     paging: false,
     info: false,
     ordering: false,
   });
-  // $("#btnGenerateData").click(function () {
-  //   var data = GetTableDataAsJson();
-  //   var totalCount = $("#totalCount").val();
-  //   var requestObj = new Object();
-  //   requestObj.Data = data;
-  //   requestObj.totalCount = totalCount;
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "/generateData",
-  //     contentType: "application/json",
-  //     data: JSON.stringify(requestObj),
-  //     dataType: "json",
-  //     success: function (result) {
-  //       //console.log(result);
-  //       var obj = JSON.parse(result);
-  //       var columnData = JSON.parse(obj["Columns"]);
-  //       var outputData = JSON.stringify(obj["Output"]);
-  //       ManageResultTable(columnData, outputData);
-  //       console.log(outputData);
-  //     },
-  //     error: function () {
-  //       console.log("Fail");
-  //     },
-  //   });
-  // });
+  $("#dataAttributeDisplayTable").on("click", ".gridDeleteButton", function () {
+    var table = $("#dataAttributeDisplayTable").DataTable();
+    var removingRow = $(this).closest("tr");
+    table.row(removingRow).remove().draw();
+    var json = GetTableDataAsJson();
+    $("#dataQuery").val(JSON.stringify(json));
+  });
+  $("#btnGenerateData").click(function (e) {
+    var table = $("#dataAttributeDisplayTable").DataTable();
+    if (table.rows().count() == 0) {
+      alert("You need to have atleast one attribute added");
+      e.preventDefault();
+      return false;
+    }
+  });
+  $("#generateDataForm").submit(function (e) {
+    var table = $("#dataAttributeDisplayTable").DataTable();
+    if (table.rows().count() == 0) {
+      alert("You need to have atleast one attribute added");
+      e.preventDefault();
+      return false;
+    }
+  });
+  function OnDataRowDeleteClick() {
+    var table = $("#dataAttributeDisplayTable").DataTable();
+    var removingRow = $(this).closest("tr");
+    table.row(removingRow).remove().draw();
+  }
   $("#attributeType").change(function () {
     changedValue = $(this).val();
     HideAllOptionFields();
@@ -50,6 +54,26 @@ $(document).ready(function () {
     }
   });
   $("#btnAddDataAttribute").click(function () {
+    if ($("#attributeName").val() === "" || $("#attributeType").val() === "") {
+      alert("Please select relevant values");
+      return;
+    }
+    changedValue = $("#attributeType").val();
+    if (
+      changedValue === "Categorical" &&
+      $("#dataOptionsList option").length === 0
+    ) {
+      alert("Please select relevant values");
+      return;
+    }
+    if (
+      (changedValue == "Continous (int)" ||
+        changedValue == "Continous (float)") &&
+      ($("#lowerBoundText").val() === "" || $("#upperBoundText").val() === "")
+    ) {
+      alert("Please select relevant values");
+      return;
+    }
     GetAllDataFields();
     var json = GetTableDataAsJson();
     $("#dataQuery").val(JSON.stringify(json));
@@ -91,12 +115,15 @@ function GetAllDataFields() {
   dataObj.UpperBound = $("#upperBoundText").val();
   t.row
     .add([
+      "<span class='dataGridId'>" + dataObj.Id + "</span>",
       dataObj.AttributeName,
       dataObj.AttributeType,
       dataObj.DataTypeValues.join("|"),
       dataObj.LowerBound,
       dataObj.UpperBound,
-      "",
+      '<button class="gridDeleteButton" data-id="' +
+        dataObj.Id +
+        '">Delete</button>',
     ])
     .draw(false);
   ResetAllValues();
@@ -107,6 +134,8 @@ function HideAllOptionFields() {
 }
 function ResetAllValues() {
   $("#rowId").val(uuidv4());
+  $(".dataOptionsRow").hide();
+  $(".numberOptionRow").hide();
   $("#attributeName").val("");
   $("#attributeType").val("");
   $("#addDataOption").val("");

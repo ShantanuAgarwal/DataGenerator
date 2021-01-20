@@ -31,6 +31,9 @@
         id="addDataOption"
         placeholder="Enter Data Value and Click Add"
       />
+      <small id="categorialDataHelp" class="form-text text-muted"
+        >You can add multiple options at once by seperating them with a | (pipe). For example, to enter both Male and Female options, type "Male|Female" and click add</small
+      >
       <a
         id="btnAddDataOption"
         href="#"
@@ -81,6 +84,7 @@
 <table id="dataAttributeDisplayTable" class="display" style="width: 100%">
   <thead>
     <tr>
+      <th>Row ID</th>
       <th>Attribute Name</th>
       <th>Attribute Type</th>
       <th>List of Options</th>
@@ -90,7 +94,7 @@
     </tr>
   </thead>
 </table>
-<form action={{ url_for('generateData') }} method='POST' class="my-5">
+<form id ="generateDataForm'action={{ url_for('generateData') }} method='POST' class="my-5">
   <div class="form-row">
     <div class="form-group col-md-12">
       <input type="hidden" id="dataQuery" name="dataQuery"/>
