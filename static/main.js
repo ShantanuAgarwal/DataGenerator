@@ -28,14 +28,6 @@ $(document).ready(function () {
       return false;
     }
   });
-  $("#generateDataForm").submit(function (e) {
-    var table = $("#dataAttributeDisplayTable").DataTable();
-    if (table.rows().count() == 0) {
-      alert("You need to have atleast one attribute added");
-      e.preventDefault();
-      return false;
-    }
-  });
   function OnDataRowDeleteClick() {
     var table = $("#dataAttributeDisplayTable").DataTable();
     var removingRow = $(this).closest("tr");
